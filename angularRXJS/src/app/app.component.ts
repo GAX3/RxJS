@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { concat, interval, Observable, range } from "rxjs";
-import { take } from "rxjs/operators";
+import { interval } from "rxjs";
+import { bufferTime } from "rxjs/operators";
 
 
 @Component({
@@ -16,23 +16,13 @@ export class AppComponent {
   constructor (){}
 
   public ngOnInit(): void{    
-    const myObservable = new Observable((subscriber) =>{
-      subscriber.next(1);
-      subscriber.next(2);
-      subscriber.next(3);
-      //subscriber.error(`Error 1`); //Error Termina el ciclo de vida del observable 
-      subscriber.next(4);  // sino hay ningun error el ciclo continua
-      subscriber.complete(); //El ciclo puede acabar al completar todas las tareas
-    });
+   const timer = interval(500);
 
-    const subs = myObservable.subscribe({
-      next: x => console.log('El siguiente valor es ' + x),
-      error: err => console.error(`Error: ${err}`),
-      complete: () => console.log(`Susbcrption complete`)
-    })
+    const buffer = timer.pipe(bufferTime(2000));
 
-    subs.unsubscribe();
+    const subs = buffer.subscribe((val) => { console.log('Buffer: ', val)} )
   }
+
 
   public ngOnDestroy(): void {}
 
