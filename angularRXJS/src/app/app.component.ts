@@ -8,7 +8,7 @@ import { take } from "rxjs/operators";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-// SHARE 
+// Ciclo de Observable 
 
 export class AppComponent {
   title = 'angularRXJS Ciclo Observavle | Next, Error, Complete';
@@ -20,8 +20,9 @@ export class AppComponent {
       subscriber.next(1);
       subscriber.next(2);
       subscriber.next(3);
-      subscriber.error(`Error 1`);
-      subscriber.complete();
+      //subscriber.error(`Error 1`); //Error Termina el ciclo de vida del observable 
+      subscriber.next(4);  // sino hay ningun error el ciclo continua
+      subscriber.complete(); //El ciclo puede acabar al completar todas las tareas
     });
 
     const subs = myObservable.subscribe({
