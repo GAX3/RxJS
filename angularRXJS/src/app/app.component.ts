@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import {  fromEvent } from "rxjs";
-import { tap } from "rxjs/operators";
+import {  fromEvent, timer } from "rxjs";
+import { tap, mapTo, share, map } from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -10,23 +10,28 @@ import { tap } from "rxjs/operators";
 // Tap -
 
 export class AppComponent {
-  title = 'angularRXJS Map and Filter';
+  title = 'angularRXJS Share';
 
   constructor (){}
 
   public ngOnInit(): void{    
-   const clicks = fromEvent(document, 'click');
+   const time =  timer(2000);
 
-   const position = clicks.pipe(
-    tap(ev => console.log(`Procesado ${ev}`),
-      err => console.log(err),
-      () => console.log('Completado')
-    )
+   const obs = time.pipe(
+     tap(() => console.log("TAP ON")),
+     mapTo('END OBS')
    );
 
-   position.subscribe((pos) => console.log(pos));
+   const subs01 = obs.subscribe(val => console.log(val));
+   const subs02 = obs.subscribe(val => console.log(val));
 
+   const sharedObs = obs.pipe(share());
+
+   console.log("SHARE ON");
+   const subs03 = sharedObs.subscribe(val => console.log(val));
+   const subs04 = sharedObs.subscribe(val => console.log(val));
   }
+
 
 
 }
