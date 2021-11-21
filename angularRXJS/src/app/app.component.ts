@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { concat, interval, range } from "rxjs";
+import { concat, interval, Observable, range } from "rxjs";
 import { take } from "rxjs/operators";
 
 
@@ -11,19 +11,29 @@ import { take } from "rxjs/operators";
 // SHARE 
 
 export class AppComponent {
-  title = 'angularRXJS Concat';
+  title = 'angularRXJS Ciclo Observavle | Next, Error, Complete';
 
   constructor (){}
 
   public ngOnInit(): void{    
-    const timer = interval(1000).pipe(take(4));  //Multiplicara interval * take - 1000*4 realizando interaccion en 0,1,2,3 S.
-    const rango = range(1, 10);                  //Range nos permite contar de 1 - 10
-  
-    const result = concat(timer, rango); //Concat permite ordenar las observables a ejecutar
+    const myObservable = new Observable((subscriber) =>{
+      subscriber.next(1);
+      subscriber.next(2);
+      subscriber.next(3);
+      subscriber.error(`Error 1`);
+      subscriber.complete();
+    });
 
-    result.subscribe(x => console.log(x)); // subscripcion a las observable result
+    const subs = myObservable.subscribe({
+      next: x => console.log('El siguiente valor es ' + x),
+      error: err => console.error(`Error: ${err}`),
+      complete: () => console.log(`Susbcrption complete`)
+    })
 
+    subs.unsubscribe();
   }
+
+  public ngOnDestroy(): void {}
 
 }
 
