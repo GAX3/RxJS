@@ -1,38 +1,29 @@
 import { Component, OnInit } from "@angular/core";
-import {  fromEvent, timer } from "rxjs";
-import { tap, mapTo, share, map } from "rxjs/operators";
+import { concat, interval, range } from "rxjs";
+import { take } from "rxjs/operators";
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-// Tap -
+// SHARE 
 
 export class AppComponent {
-  title = 'angularRXJS Share';
+  title = 'angularRXJS Concat';
 
   constructor (){}
 
   public ngOnInit(): void{    
-   const time =  timer(2000);
+    const timer = interval(1000).pipe(take(4));  //Multiplicara interval * take - 1000*4 realizando interaccion en 0,1,2,3 S.
+    const rango = range(1, 10);                  //Range nos permite contar de 1 - 10
+  
+    const result = concat(timer, rango); //Concat permite ordenar las observables a ejecutar
 
-   const obs = time.pipe(
-     tap(() => console.log("TAP ON")),
-     mapTo('END OBS')
-   );
+    result.subscribe(x => console.log(x)); // subscripcion a las observable result
 
-   const subs01 = obs.subscribe(val => console.log(val));
-   const subs02 = obs.subscribe(val => console.log(val));
-
-   const sharedObs = obs.pipe(share());
-
-   console.log("SHARE ON");
-   const subs03 = sharedObs.subscribe(val => console.log(val));
-   const subs04 = sharedObs.subscribe(val => console.log(val));
   }
-
-
 
 }
 
