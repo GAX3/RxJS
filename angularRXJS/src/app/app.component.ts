@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { interval, timer} from 'rxjs';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { from, fromEvent } from 'rxjs';
+
 
 
 @Component({
@@ -7,25 +8,25 @@ import { interval, timer} from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+// fromEvent
+
 export class AppComponent {
-  title = 'angularRXJS';
+  title = 'angularRXJS From Event';
+
+  constructor (){}
   
+  @ViewChild('divGreen',{ static: true}) divGreen: ElementRef | undefined;
 
-  ngOnInit(){
-    //Interval nos permite repetir unas misma funcion cada cierto tiempo
-    const contador = interval(2000);
-
-    //Timer ejecuta la funcion en el tiempo definido 
-    const contador2 = timer(2000);
-
-    contador2.subscribe((n) =>{
-      console.log(`Timer`);
+  public ngOnInit(): void{    
+    const mouseMove = fromEvent(this.divGreen?.nativeElement, `mousemove`);
+    
+    mouseMove.subscribe((e: any | MouseEvent)=>{
+      console.log(`Coords X: ${e.clientX}, Y:${e.clientY}`);
     })
-
-
-    contador.subscribe((n) =>{
-      console.log(`Cada ${n} segundos`)
-    })
+  
   }
 
+
 }
+
+
