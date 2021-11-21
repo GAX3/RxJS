@@ -1,29 +1,38 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { from, fromEvent } from 'rxjs';
-
-
+import { Component, OnInit } from "@angular/core";
+import { pipe, of, from, fromEvent } from "rxjs";
+import { map, filter } from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-// fromEvent
+// Map And Filter
 
 export class AppComponent {
-  title = 'angularRXJS From Event';
+  title = 'angularRXJS Map and Filter';
 
   constructor (){}
-  
-  @ViewChild('divGreen',{ static: true}) divGreen: ElementRef | undefined;
 
   public ngOnInit(): void{    
-    const mouseMove = fromEvent(this.divGreen?.nativeElement, `mousemove`);
-    
-    mouseMove.subscribe((e: any | MouseEvent)=>{
-      console.log(`Coords X: ${e.clientX}, Y:${e.clientY}`);
-    })
+    const nums = of(1,2,3,4,5,6,7,8,9,10);
   
+    const alCuadrado = pipe(
+      filter((n: number | any ) => n % 2 === 0),
+      map(n => n *n)
+    );
+
+    const cuadrado = alCuadrado(nums);
+
+    cuadrado.subscribe((x)=>{
+      console.log(`Cuadrado: ${x}`)
+    })
+
+
+  
+  
+  
+
   }
 
 
