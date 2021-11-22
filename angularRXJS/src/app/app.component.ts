@@ -1,8 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { interval, forkJoin, of } from "rxjs";
-import { delay, take } from "rxjs/operators";
-import { ajax } from 'rxjs/ajax'
-
+import { of } from "rxjs";
+import { delay, concatMap } from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -12,33 +10,22 @@ import { ajax } from 'rxjs/ajax'
 
 
 export class AppComponent {
-  title = 'angularRXJS forkJoin';
+  title = 'angularRXJS concatMap';
 
   constructor(){}
 
   public ngOnInit(): void{
-    /*
-    const fork = forkJoin(
-      of('Hola'),
-      of('Mundo').pipe(delay(500)),
-      interval(1000).pipe(take(2))
-    );
+    let a = 2000
+    let b = 1000
+    let c = 3000 
+    const source = of(a, b, c);
 
-    fork.subscribe(val => console.log(val));
-    */
-   
-    //Using Ajax
-    const src = forkJoin(
-      {
-        google: ajax.getJSON('https://api.github.com/users/google'),
-        microsoft: ajax.getJSON('https://api.github.com/users/microsoft'),
-        ctmil: ajax.getJSON('https://api.github.com/users/ctmil'),
-        gax3: ajax.getJSON('https://api.github.com/users/gax3')
+    const obsConcatMap = source.pipe(
+      concatMap(v => of(`Valor: ${v}`).pipe(delay(v)))
+      );
 
-      }
-    );
+    obsConcatMap.subscribe((v)=> (console.log(v)));
 
-    src.subscribe((x) =>  console.log(x));
 
   }
 
