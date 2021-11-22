@@ -39,6 +39,7 @@ export class AppComponent {
       mergeMap(v => v)
     );
 
+    //Traera la informacion de la api y mostrara segun orden de llegada se pierde orden pero evitamos delay 
     obsMergeMap.subscribe(v => console.log(v));
 
 
